@@ -1,0 +1,28 @@
+{
+  "mode": "query",
+  "filters": {
+    "date": {
+      "from": "2025-01-01",
+      "to": "2025-12-31",
+      "basis": "document_number_year"
+    },
+    "regions": {
+      "basis": "issuer_seat",
+      "scope": "city",
+      "ids": [
+        "city:jiangsu:南京"
+      ]
+    }
+  },
+  "page": {
+    "size": 20
+  },
+  "statistics": {
+    "group_by": [
+      "document_number_year",
+      "issuer_seat_city",
+      "authority_city"
+    ]
+  },
+  "output": "json"
+}

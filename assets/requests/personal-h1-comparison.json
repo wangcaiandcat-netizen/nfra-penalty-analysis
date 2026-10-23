@@ -1,0 +1,4 @@
+{"periods":[
+  {"label":"2025上半年","request":{"filters":{"date":{"from":"2025-01-01","to":"2025-06-30","basis":"publication"}},"statistics":{"group_by":["subject_composition"],"include_personal_sanctions":true}}},
+  {"label":"2026上半年","request":{"filters":{"date":{"from":"2026-01-01","to":"2026-06-30","basis":"publication"}},"statistics":{"group_by":["subject_composition"],"include_personal_sanctions":true}}}
+]}

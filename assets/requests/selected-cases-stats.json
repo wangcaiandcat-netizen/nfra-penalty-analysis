@@ -1,0 +1,19 @@
+{
+  "mode": "set_stats",
+  "sets": [
+    {
+      "set_id": "chosen",
+      "case_ids": [
+        "1126120-T1"
+      ],
+      "include_duplicates": false
+    }
+  ],
+  "statistics": {
+    "group_by": [
+      "stage",
+      "party_type"
+    ]
+  },
+  "output": "json"
+}

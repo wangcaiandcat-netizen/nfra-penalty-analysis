@@ -1,0 +1,28 @@
+{
+  "mode": "batch",
+  "requests": [
+    {
+      "request_id": "icbc-2025-bills",
+      "filters": {
+        "date": {"from": "2025-01-01", "to": "2025-12-31", "basis": "publication"},
+        "subjects": {"names": ["工商银行"], "match": "contains"},
+        "business": {"codes": ["bills"], "match": "any"},
+        "stages": ["decided"],
+        "include_duplicates": false
+      },
+      "page": {"size": 20}
+    },
+    {
+      "request_id": "ccb-2025-bills",
+      "filters": {
+        "date": {"from": "2025-01-01", "to": "2025-12-31", "basis": "publication"},
+        "subjects": {"names": ["建设银行"], "match": "contains"},
+        "business": {"codes": ["bills"], "match": "any"},
+        "stages": ["decided"],
+        "include_duplicates": false
+      },
+      "page": {"size": 20}
+    }
+  ],
+  "output": "json"
+}

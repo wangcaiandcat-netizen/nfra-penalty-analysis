@@ -1,0 +1,3 @@
+interface:
+  display_name: "金融监管处罚案例分析助手"
+  short_description: "查询监管处罚案例、核查个人处罚证据，按后端统一口径比较期间统计并导出Excel"

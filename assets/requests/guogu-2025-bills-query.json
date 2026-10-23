@@ -1,0 +1,16 @@
+{
+  "mode": "query",
+  "filters": {
+    "date": {"from": "2025-01-01", "to": "2025-12-31", "basis": "publication"},
+    "institution_types": {"codes": ["guogu"], "match": "any", "basis": "respondent_or_employer"},
+    "business": {"codes": ["bills"], "match": "any"},
+    "stages": ["decided"],
+    "include_duplicates": false
+  },
+  "statistics": {
+    "group_by": ["month", "institution_type", "subject_composition", "business_type"],
+    "top_n": 50
+  },
+  "page": {"size": 100},
+  "output": "json"
+}

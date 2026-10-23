@@ -1,0 +1,12 @@
+{
+  "mode": "stats",
+  "filters": {
+    "date": {"from": "2025-07-01", "to": "2025-09-30", "basis": "publication"},
+    "regions": {"ids": ["province:shanghai"], "scope": "province"},
+    "business": {"codes": ["bills"], "match": "any"},
+    "stages": ["decided"],
+    "include_duplicates": false
+  },
+  "statistics": {"group_by": ["month", "business_type", "party_type"], "top_n": 10},
+  "output": "json"
+}

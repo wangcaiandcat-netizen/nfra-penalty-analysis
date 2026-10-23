@@ -1,0 +1,16 @@
+{
+  "mode": "query",
+  "filters": {
+    "affiliations": {
+      "institutions": [
+        "淮安"
+      ],
+      "match": "contains",
+      "include_mixed": false
+    }
+  },
+  "page": {
+    "size": 20
+  },
+  "output": "json"
+}

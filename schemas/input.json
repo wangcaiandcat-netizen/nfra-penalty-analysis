@@ -1,0 +1,928 @@
+{
+  "$defs": {
+    "BatchItem": {
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_-]+$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "case_id": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Case Id"
+        },
+        "filters": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PenaltyFilterSpec"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "page": {
+          "$ref": "#/$defs/PageSpec"
+        },
+        "statistics": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StatisticsSpec"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "request_id"
+      ],
+      "title": "BatchItem",
+      "type": "object"
+    },
+    "DateFilter": {
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "From"
+        },
+        "to": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "To"
+        },
+        "basis": {
+          "default": "publication",
+          "enum": [
+            "publication",
+            "decision",
+            "document_number_year",
+            "decision_or_document_year"
+          ],
+          "title": "Basis",
+          "type": "string"
+        }
+      },
+      "title": "DateFilter",
+      "type": "object"
+    },
+    "PageSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "size": {
+          "default": 20,
+          "maximum": 100,
+          "minimum": 1,
+          "title": "Size",
+          "type": "integer"
+        },
+        "cursor": {
+          "anyOf": [
+            {
+              "maxLength": 3000,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cursor"
+        }
+      },
+      "title": "PageSpec",
+      "type": "object"
+    },
+    "PenaltyFilterSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "date": {
+          "$ref": "#/$defs/DateFilter"
+        },
+        "subjects": {
+          "$ref": "#/$defs/SubjectFilter"
+        },
+        "regions": {
+          "$ref": "#/$defs/RegionFilter"
+        },
+        "business": {
+          "$ref": "#/$defs/TagFilter"
+        },
+        "themes": {
+          "$ref": "#/$defs/TagFilter"
+        },
+        "stages": {
+          "items": {
+            "enum": [
+              "decided",
+              "proposed",
+              "enforcement",
+              "revoked"
+            ],
+            "type": "string"
+          },
+          "maxItems": 4,
+          "minItems": 1,
+          "title": "Stages",
+          "type": "array"
+        },
+        "include_duplicates": {
+          "default": false,
+          "title": "Include Duplicates",
+          "type": "boolean"
+        },
+        "keyword": {
+          "default": "",
+          "maxLength": 200,
+          "title": "Keyword",
+          "type": "string"
+        },
+        "document_number": {
+          "$ref": "#/$defs/DocumentNumberFilter"
+        },
+        "affiliations": {
+          "$ref": "#/$defs/AffiliationFilter"
+        },
+        "doc_ids": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "maxItems": 50,
+          "minItems": 0
+        },
+        "institution_types": {
+          "$ref": "#/$defs/InstitutionTypeFilter"
+        }
+      },
+      "title": "PenaltyFilterSpec",
+      "type": "object"
+    },
+    "RegionFilter": {
+      "additionalProperties": false,
+      "properties": {
+        "ids": {
+          "items": {
+            "maxLength": 160,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 50,
+          "title": "Ids",
+          "type": "array"
+        },
+        "scope": {
+          "default": "jurisdiction",
+          "enum": [
+            "jurisdiction",
+            "province",
+            "city"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "basis": {
+          "type": "string",
+          "enum": [
+            "authority_jurisdiction",
+            "document_jurisdiction",
+            "issuer_seat"
+          ],
+          "default": "authority_jurisdiction"
+        }
+      },
+      "title": "RegionFilter",
+      "type": "object"
+    },
+    "StatisticsSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "group_by": {
+          "items": {
+            "enum": [
+              "year",
+              "quarter",
+              "month",
+              "region",
+              "authority_province",
+              "authority_city",
+              "party_type",
+              "subject_composition",
+              "business_type",
+              "stage",
+              "document_number_year",
+              "document_jurisdiction",
+              "document_province",
+              "issuer_seat_city",
+              "institution_type"
+            ],
+            "type": "string"
+          },
+          "maxItems": 15,
+          "minItems": 1,
+          "title": "Group By",
+          "type": "array"
+        },
+        "top_n": {
+          "default": 10,
+          "maximum": 50,
+          "minimum": 1,
+          "title": "Top N",
+          "type": "integer"
+        },
+        "include_personal_sanctions": {
+          "type": "boolean",
+          "default": false,
+          "description": "请求完整筛选集的纯个人处罚统计，混合另列，不拆人数。"
+        }
+      },
+      "title": "StatisticsSpec",
+      "type": "object"
+    },
+    "SubjectFilter": {
+      "additionalProperties": false,
+      "properties": {
+        "names": {
+          "items": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 50,
+          "title": "Names",
+          "type": "array"
+        },
+        "match": {
+          "default": "contains",
+          "enum": [
+            "exact",
+            "contains"
+          ],
+          "title": "Match",
+          "type": "string"
+        },
+        "party_types": {
+          "items": {
+            "enum": [
+              "institution",
+              "person",
+              "unknown"
+            ],
+            "type": "string"
+          },
+          "maxItems": 3,
+          "title": "Party Types",
+          "type": "array"
+        },
+        "compositions": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "person",
+              "institution",
+              "mixed",
+              "unknown"
+            ]
+          },
+          "maxItems": 4,
+          "description": "后端四类主体构成；不得与非空party_types同时使用。"
+        }
+      },
+      "title": "SubjectFilter",
+      "type": "object"
+    },
+    "TagFilter": {
+      "additionalProperties": false,
+      "properties": {
+        "codes": {
+          "items": {
+            "maxLength": 100,
+            "minLength": 1,
+            "pattern": "^[a-z][a-z0-9_.:-]*$",
+            "type": "string"
+          },
+          "maxItems": 30,
+          "title": "Codes",
+          "type": "array"
+        },
+        "match": {
+          "default": "any",
+          "enum": [
+            "any",
+            "all"
+          ],
+          "title": "Match",
+          "type": "string"
+        }
+      },
+      "title": "TagFilter",
+      "type": "object"
+    },
+    "DocumentNumberFilter": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "years": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1900,
+            "maximum": 2100
+          },
+          "maxItems": 50,
+          "minItems": 0
+        },
+        "prefixes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "maxItems": 50,
+          "minItems": 0
+        }
+      }
+    },
+    "AffiliationFilter": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "institutions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "maxItems": 50,
+          "minItems": 0
+        },
+        "match": {
+          "type": "string",
+          "enum": [
+            "contains",
+            "exact"
+          ],
+          "default": "contains"
+        },
+        "include_mixed": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "CaseSet": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "set_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "case_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          },
+          "maxItems": 1000,
+          "minItems": 1
+        },
+        "expected_data_revision": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Data Revision"
+        },
+        "include_duplicates": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": [
+        "set_id",
+        "case_ids"
+      ]
+    },
+    "InstitutionTypeFilter": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "codes": {
+          "type": "array",
+          "maxItems": 30,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": "^[a-z][a-z0-9_.:-]*$"
+          }
+        },
+        "match": {
+          "type": "string",
+          "enum": [
+            "any",
+            "all"
+          ],
+          "default": "any"
+        },
+        "basis": {
+          "type": "string",
+          "enum": [
+            "respondent_or_employer",
+            "respondent",
+            "employer"
+          ],
+          "default": "respondent_or_employer"
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "description": "Native Skill envelope. CLI additionally checks unique request/set IDs, total raw set members <=5000, ordered real dates and keyword token limits.",
+  "properties": {
+    "mode": {
+      "default": "query",
+      "enum": [
+        "detail",
+        "query",
+        "batch",
+        "stats",
+        "explain",
+        "set_stats",
+        "document"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "filters": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PenaltyFilterSpec"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "case_ids": {
+      "items": {
+        "maxLength": 128,
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9_-]+$",
+        "type": "string"
+      },
+      "maxItems": 50,
+      "title": "Case Ids",
+      "type": "array"
+    },
+    "page": {
+      "$ref": "#/$defs/PageSpec"
+    },
+    "statistics": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/StatisticsSpec"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "requests": {
+      "items": {
+        "$ref": "#/$defs/BatchItem"
+      },
+      "maxItems": 50,
+      "title": "Requests",
+      "type": "array"
+    },
+    "expected_data_revision": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expected Data Revision"
+    },
+    "question": {
+      "default": "",
+      "maxLength": 1000,
+      "title": "Question",
+      "type": "string"
+    },
+    "output": {
+      "default": "chat",
+      "enum": [
+        "chat",
+        "json"
+      ],
+      "title": "Output",
+      "type": "string"
+    },
+    "sets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CaseSet"
+      },
+      "maxItems": 10,
+      "minItems": 0
+    },
+    "doc_id": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "title": "AnalysisRequest",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [
+    {
+      "if": {
+        "anyOf": [
+          {
+            "properties": {
+              "mode": {
+                "const": "query"
+              }
+            },
+            "required": [
+              "mode"
+            ]
+          },
+          {
+            "not": {
+              "required": [
+                "mode"
+              ]
+            }
+          }
+        ]
+      },
+      "then": {
+        "properties": {
+          "case_ids": {
+            "const": []
+          },
+          "requests": {
+            "const": []
+          },
+          "sets": {
+            "const": []
+          },
+          "doc_id": {
+            "const": null
+          },
+          "question": {
+            "const": ""
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "stats"
+          }
+        },
+        "required": [
+          "mode"
+        ]
+      },
+      "then": {
+        "properties": {
+          "case_ids": {
+            "const": []
+          },
+          "requests": {
+            "const": []
+          },
+          "sets": {
+            "const": []
+          },
+          "doc_id": {
+            "const": null
+          },
+          "question": {
+            "const": ""
+          },
+          "page": {
+            "type": "object",
+            "properties": {
+              "size": {
+                "const": 20
+              },
+              "cursor": {
+                "const": null
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "detail"
+          }
+        },
+        "required": [
+          "mode"
+        ]
+      },
+      "then": {
+        "properties": {
+          "filters": {
+            "const": null
+          },
+          "requests": {
+            "const": []
+          },
+          "sets": {
+            "const": []
+          },
+          "doc_id": {
+            "const": null
+          },
+          "statistics": {
+            "const": null
+          },
+          "question": {
+            "const": ""
+          },
+          "page": {
+            "type": "object",
+            "properties": {
+              "size": {
+                "const": 20
+              },
+              "cursor": {
+                "const": null
+              }
+            }
+          },
+          "case_ids": {
+            "minItems": 1
+          }
+        },
+        "required": [
+          "case_ids"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "batch"
+          }
+        },
+        "required": [
+          "mode"
+        ]
+      },
+      "then": {
+        "properties": {
+          "filters": {
+            "const": null
+          },
+          "case_ids": {
+            "const": []
+          },
+          "sets": {
+            "const": []
+          },
+          "doc_id": {
+            "const": null
+          },
+          "statistics": {
+            "const": null
+          },
+          "question": {
+            "const": ""
+          },
+          "page": {
+            "type": "object",
+            "properties": {
+              "size": {
+                "const": 20
+              },
+              "cursor": {
+                "const": null
+              }
+            }
+          },
+          "requests": {
+            "minItems": 1
+          }
+        },
+        "required": [
+          "requests"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "explain"
+          }
+        },
+        "required": [
+          "mode"
+        ]
+      },
+      "then": {
+        "properties": {
+          "filters": {
+            "const": null
+          },
+          "requests": {
+            "const": []
+          },
+          "sets": {
+            "const": []
+          },
+          "doc_id": {
+            "const": null
+          },
+          "statistics": {
+            "const": null
+          },
+          "page": {
+            "type": "object",
+            "properties": {
+              "size": {
+                "const": 20
+              },
+              "cursor": {
+                "const": null
+              }
+            }
+          },
+          "case_ids": {
+            "minItems": 1,
+            "maxItems": 10
+          }
+        },
+        "required": [
+          "case_ids"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "set_stats"
+          }
+        },
+        "required": [
+          "mode"
+        ]
+      },
+      "then": {
+        "properties": {
+          "filters": {
+            "const": null
+          },
+          "case_ids": {
+            "const": []
+          },
+          "requests": {
+            "const": []
+          },
+          "doc_id": {
+            "const": null
+          },
+          "question": {
+            "const": ""
+          },
+          "page": {
+            "type": "object",
+            "properties": {
+              "size": {
+                "const": 20
+              },
+              "cursor": {
+                "const": null
+              }
+            }
+          },
+          "sets": {
+            "minItems": 1
+          }
+        },
+        "required": [
+          "sets"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "document"
+          }
+        },
+        "required": [
+          "mode"
+        ]
+      },
+      "then": {
+        "properties": {
+          "filters": {
+            "const": null
+          },
+          "case_ids": {
+            "const": []
+          },
+          "requests": {
+            "const": []
+          },
+          "sets": {
+            "const": []
+          },
+          "statistics": {
+            "const": null
+          },
+          "question": {
+            "const": ""
+          },
+          "doc_id": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "doc_id"
+        ]
+      }
+    }
+  ]
+}
