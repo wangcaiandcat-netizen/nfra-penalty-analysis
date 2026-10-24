@@ -14,6 +14,12 @@
 
 ZIP 根目录包含 `SKILL.md`。需要手动安装时，完整解压到宿主使用的 Skill 目录，保留子目录结构。
 
+## 上传到 SkillHub
+
+在同一 [R16 发布页](https://github.com/wangcaiandcat-netizen/nfra-penalty-analysis/releases/tag/r16) 下载 **`nfra-penalty-analysis-skillhub-20261024-r16.zip`** 后提交。平台不允许 CMD 文件，此专用包移除了可选的 `run.cmd`，其余文件与 R16 WorkBuddy 包逐字节一致，Windows 使用下文的 Python 入口。
+
+维护者生成平台包：`python3 tools/package_skill.py --target skillhub`；生成带可选 Windows 包装入口的本地安装包：`python3 tools/package_skill.py --target workbuddy`。
+
 ## 快速检查
 
 Windows PowerShell，在 Skill 目录运行：
