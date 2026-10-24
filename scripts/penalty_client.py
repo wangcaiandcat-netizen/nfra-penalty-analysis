@@ -227,7 +227,8 @@ class Client:
         self.base_url = base_url
         self.timeout = timeout
         self.environ = os.environ if environ is None else environ
-        self._opener = build_opener(ProxyHandler({}), _NoRedirect())
+        # Build on the first real request so previews never inspect proxy config.
+        self._opener = None
 
     def execute(self, command, payload=None, dry_run=False):
         try:
@@ -258,6 +259,10 @@ class Client:
         request = Request(base + plan["path"] + ("?" + query if query else ""), data=data, method=plan["method"],
                           headers=headers)
         try:
+            if self._opener is None:
+                # Respect existing HTTP(S)_PROXY/NO_PROXY and OS proxy settings.
+                # This does not start a proxy, change the API origin, or retry.
+                self._opener = build_opener(ProxyHandler(), _NoRedirect())
             with self._opener.open(request, timeout=self.timeout) as response:
                 if not 200 <= response.status < 300:
                     raise _http_error(response.status, response.headers)

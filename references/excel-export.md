@@ -2,12 +2,12 @@
 
 ## 统一入口先检查，再加载业务代码
 
-Windows从PowerShell用安装目录的run.cmd；WSL/Linux用sh run.sh；已有解释器时用python -B -X utf8 scripts/run.py。入口先确认Python>=3.10，再检查标准库和本模式必需文件；通过后才加载业务模块、读取请求、调用API。查询/核对不创建文件。直接Client对象也在构造时预检。
+Windows从PowerShell用已有Python执行py -3 -I -B -X utf8 scripts/run.py；WSL/Linux用sh run.sh。run.cmd只是可选入口，缺失时仍可直接用scripts/run.py；没有py启动器时使用已有Python 3.10+解释器的明确路径。入口先确认Python>=3.10，再检查标准库和本模式必需文件；通过后才加载业务模块、读取请求、调用API。查询/核对不创建文件。直接Client对象也在构造时预检。
 
 ```powershell
-& 'C:\已知安装目录\run.cmd' check
-$requestJson | & 'C:\已知安装目录\run.cmd' query --input - --dry-run
-$requestJson | & 'C:\已知安装目录\run.cmd' query --input -
+py -3 -I -B -X utf8 'C:\已知安装目录\scripts\run.py' check
+$requestJson | py -3 -I -B -X utf8 'C:\已知安装目录\scripts\run.py' query --input - --dry-run
+$requestJson | py -3 -I -B -X utf8 'C:\已知安装目录\scripts\run.py' query --input -
 ```
 
 ```bash
@@ -22,7 +22,7 @@ python3 -B -X utf8 /已知安装目录/scripts/run.py query --input - --dry-run
 新查询并导出用 `run.py workflow --input - --output 绝对路径.xlsx`；两年或多个期间用`run.py compare --input - --output 绝对路径.xlsx`，一次调用合并交付，各期来源带期间标签。两者同进程完成检查、逐页预演、取全、核对和导出。无需保存请求文件、写分页脚本或build_bundle.py。详见[内存工作流](memory-workflow.md)。下面的手工check与离线export适用于已有响应。
 
 ```powershell
-& 'C:\已知安装目录\run.cmd' check --task export --output 'D:\本次任务\处罚台账.xlsx'
+py -3 -I -B -X utf8 'C:\已知安装目录\scripts\run.py' check --task export --output 'D:\本次任务\处罚台账.xlsx'
 ```
 
 选择已存在的任务目录，不能把文件写Skill安装目录。已有同名文件直接拒绝，不覆盖。检查使用一次零字节、自动删除的权限探针，不写案例数据，不遗留中间文件；无需安装Excel、openpyxl或其他第三方包。目录/权限通过不保证后续磁盘状态不变，保存时仍检查错误。
@@ -38,7 +38,7 @@ python3 -B -X utf8 /已知安装目录/scripts/run.py query --input - --dry-run
 上例仅说明结构，responses内须为对象。多个分页响应保持同条件、同修订；用户要全量台账时先取完所有页。可直接将现有response、set_response对象组成bundle，不需要先保存JSON。
 
 ```powershell
-$bundleJson | & 'C:\已知安装目录\run.cmd' export --input - --output 'D:\本次任务\处罚台账.xlsx'
+$bundleJson | py -3 -I -B -X utf8 'C:\已知安装目录\scripts\run.py' export --input - --output 'D:\本次任务\处罚台账.xlsx'
 ```
 
 同进程Python可调用export_xlsx.export_workbook(bundle, output_path)。脚本纯离线处理已返回数据，不自行查询、不翻页、不算罚款、不归并法律主体。

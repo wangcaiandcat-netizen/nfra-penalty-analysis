@@ -2,19 +2,19 @@
 name: nfra-penalty-analysis
 description: 通过DeepFin查询金融监管处罚案例，支持银行类别、个人处罚与同名证据核查、同口径期间统计和Excel导出。用于已配置的处罚库。
 metadata:
-  version: "2026.10.23-r15"
+  version: "2026.10.24-r16"
 ---
 
-使用随包`run.cmd`（Windows）或`sh run.sh`（Linux/WSL）；只需Python 3.10+标准库，查询和Excel导出均不安装依赖。默认生产后台`https://deepfin.vip`，显式地址或`DEEPFIN_API_BASE_URL`可覆盖；只读Key仅从`DEEPFIN_PENALTIES_API_KEY`读取。不寻找.env或历史凭据，不扫描/切换后台地址。环境检查由入口自动完成。本版适配后台接口契约1.2.0；后端就绪与错误处理见[接口参考](references/api.md)。
+Windows使用已有Python 3.10+执行`py -3 -I -B -X utf8 scripts/run.py`，Linux/WSL使用`sh run.sh`；`run.cmd`仅为可选便捷入口，平台移除它不影响直接调用Python入口。只需Python 3.10+标准库，查询和Excel导出均不安装依赖。默认生产后台`https://deepfin.vip`，显式地址或`DEEPFIN_API_BASE_URL`可覆盖；只读Key仅从`DEEPFIN_PENALTIES_API_KEY`读取。不寻找.env或历史凭据，不扫描/切换后台地址。环境检查由入口自动完成。网络沿用宿主已配置的HTTP(S)代理与NO_PROXY，未配置时直连；不修改代理设置、不创建本地转发服务，连接失败停止并报告，不额外加重试。本版适配后台接口契约1.2.0；后端就绪与错误处理见[接口参考](references/api.md)。
 
 ## 查询与文件
 
 简单查询直接用参数；相对日期按本次北京时间换成具体范围，未指定日期时不默认查两年。默认公示日期、正式决定、排除已标记重复、前20条；`--all`取全且无导出时默认完整展示；`--view brief/full`只控制展示，brief默认5条，可用`--case-limit`调整。分别说明匹配数、已获取数和已展示数。`--output`自动取全并只保存最终xlsx。
 
 ```powershell
-& 'C:\本技能目录\run.cmd' search --from 2025-01-01 --to 2025-12-31 --province 四川 --institution-type guogu --keyword 保证金
-& 'C:\本技能目录\run.cmd' search --name 张明 --exact --employer 广发银行 --subject person
-& 'C:\本技能目录\run.cmd' search --from 2026-01-01 --to 2026-06-30 --subject person --personal-stats --output 'C:\任务目录\个人处罚.xlsx'
+py -3 -I -B -X utf8 'C:\本技能目录\scripts\run.py' search --from 2025-01-01 --to 2025-12-31 --province 四川 --institution-type guogu --keyword 保证金
+py -3 -I -B -X utf8 'C:\本技能目录\scripts\run.py' search --name 张明 --exact --employer 广发银行 --subject person
+py -3 -I -B -X utf8 'C:\本技能目录\scripts\run.py' search --from 2026-01-01 --to 2026-06-30 --subject person --personal-stats --output 'C:\任务目录\个人处罚.xlsx'
 ```
 
 类别、业务、辖区代码不明确时查一次`catalog`并复用。行分类只用后端`institution_types`，国股为`guogu`，不拉全库按银行名称自行分类。地区默认发文机关监管辖区。姓名匹配受罚主体；任职关系使用`--employer`。用户查个人默认`--subject person`，查机构默认`--subject institution`；混合公示由后端另列，不并入主结果。`--include-mixed`仅用于用户明确要求将任职相关混合记录纳入查询。

@@ -1,8 +1,8 @@
 # 外部 API 契约
 
-r15默认连接生产HTTPS后台，沿用r14的后台1.2.0契约、金额范围与请求结构。`scope.api_contract_version`标识接口契约，`scope.data_revision`标识案例数据修订，两者不能混用。接口补充服务端响应校验；客户端继续复用第一页的全筛选集统计，后续页携带相同修订并设置`statistics=null`。
+r16默认连接生产HTTPS后台，查询、金额范围与请求结构沿用r15及后台1.2.0契约。`scope.api_contract_version`标识接口契约，`scope.data_revision`标识案例数据修订，两者不能混用。接口补充服务端响应校验；客户端继续复用第一页的全筛选集统计，后续页携带相同修订并设置`statistics=null`。
 
-地址优先级：--base-url → 非空 DEEPFIN_API_BASE_URL → https://deepfin.vip；空环境直接默认调用。显式错误/失败不切换地址。HTTP只允许环回，远程用HTTPS；不继承代理、不跟随重定向。[连接说明](connection.md)。
+地址优先级：--base-url → 非空 DEEPFIN_API_BASE_URL → https://deepfin.vip；空环境直接默认调用。显式错误/失败不切换地址。HTTP只允许环回，远程用HTTPS；沿用宿主已有的HTTP(S)代理与NO_PROXY，保留系统证书校验，不跟随重定向，不创建转发服务。[连接说明](connection.md)。
 
 所有路径相对于 /api/v1/external/penalties；默认匿名，鉴权开启后如下：
 
